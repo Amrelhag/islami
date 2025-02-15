@@ -4,16 +4,40 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:islami/style/reusable_components/AssetsManager.dart';
 import 'package:islami/style/reusable_components/StringsManager.dart';
 import 'package:islami/style/reusable_components/colors.dart';
+import 'package:islami/ui/Home/tabs/HadithTab.dart';
+import 'package:islami/ui/Home/tabs/QuranTab.dart';
+import 'package:islami/ui/Home/tabs/RadioTab.dart';
+import 'package:islami/ui/Home/tabs/SebhaTab.dart';
+import 'package:islami/ui/Home/tabs/TimeTab.dart';
 
-class Homescreen extends StatelessWidget {
-  const Homescreen({super.key});
+class Homescreen extends StatefulWidget {
+   Homescreen({super.key});
 static const String routeName="Home";
+
+  @override
+  State<Homescreen> createState() => HomescreenState();
+}
+
+class HomescreenState extends State<Homescreen> {
+int selectedIndex=0;
+List<Widget> tabs =[
+  QuranTab(),
+  HadithTab(),
+  SebhaTab(),
+  RadioTab(),
+  TimeTab(),
+];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-   
+    return Scaffold(backgroundColor: ColorManager.secondary,
+resizeToAvoidBottomInset:false ,
 bottomNavigationBar: NavigationBar(
-  selectedIndex: 0,
+  selectedIndex: selectedIndex,
+    onDestinationSelected:(index){
+    setState(() {
+      selectedIndex=index;
+    });
+    } ,
   backgroundColor: ColorManager.primary,
     indicatorColor: ColorManager.navItemBack,
     //only show label for the selected item
@@ -39,7 +63,6 @@ colorFilter: ColorFilter.mode(ColorManager.secondary,
             BlendMode.srcIn),
       ) ,
           label:StringsManager.ahadeth ),
-
 
 
       NavigationDestination(
@@ -77,6 +100,9 @@ colorFilter: ColorFilter.mode(ColorManager.secondary,
 
     ]
 ),
+body: tabs[selectedIndex],
+
+
     );
   }
 }

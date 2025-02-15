@@ -6,5 +6,6 @@ class ColorManager{
   static const Color  secondary = Color(0xff212121);
   static const Color tertiary = Color(0xffFFFFFF);
   static  Color navItemBack = Color(0xff202020).withOpacity(0.6);
+  static const Color SearchTextColor= Color(0xffFEFFE8);
 
 }

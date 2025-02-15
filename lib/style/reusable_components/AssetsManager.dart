@@ -1,6 +1,7 @@
 abstract final class Assetsmanager {
   static const String splash = "assets/images/Splash.png";
   static const String logo = "assets/images/Logo.png";
+  static const String ahadethBackground = "assets/images/ahdeth_Background.png";
   static const String quran_Background = "assets/images/quran_Background.png";
   static const String quran_card = "assets/images/quran_card.png";
   static const String radio_Background = "assets/images/radio_Background.png";
