@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:islami/ui/Home/screen/homeScreen.dart';
 import 'package:islami/ui/splash/screen/splash_screen.dart';
+import 'package:islami/ui/sura_details/screen/suradetails_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
  debugShowCheckedModeBanner: false,
       routes: { SplashScreen.routeName: (_) => SplashScreen(),
         Homescreen.routeName:(_)=>Homescreen(),
+        SuraDetailsScreen.routeName:(_)=>SuraDetailsScreen(),
 
       },
       initialRoute: SplashScreen.routeName,
