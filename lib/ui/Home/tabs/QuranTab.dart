@@ -7,6 +7,7 @@ import 'package:islami/style/reusable_components/colors.dart';
 import 'package:islami/style/reusable_components/constants.dart';
 import 'package:islami/ui/Home/widget/recentlySura.dart';
 import 'package:islami/ui/Home/widget/suraWidget.dart';
+import 'package:islami/ui/PrefsHelper.dart';
 
 class QuranTab extends StatefulWidget {
 
@@ -19,6 +20,12 @@ List<SuraModel> filterList=[];
 
 String searchValue="";
 List<SuraModel> mostRecentlyList =[];
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+mostRecentlyList =PrefHelper.getRecentList();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -92,24 +99,27 @@ List<SuraModel> mostRecentlyList =[];
                 //most recently text
                 if(searchValue.isEmpty)  //list inside children list
               ...[
-                  Text(StringsManager.mostRecently,
-                  style:TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      color: ColorManager.SearchTextColor,
-    ) ,),
-                SizedBox(height: 10,),
+                 if(mostRecentlyList.isNotEmpty)
+                   ...[
+                     Text(StringsManager.mostRecently,
+                       style:TextStyle(
+                         fontSize: 16,
+                         fontWeight: FontWeight.w700,
+                         color: ColorManager.SearchTextColor,
+                       ) ,),
+                     SizedBox(height: 10,),
 
-                //list view of most recently
-                Expanded(
-                  child: ListView.separated(
-                      scrollDirection:Axis.horizontal ,
-                      itemBuilder: (context,index)=>RecentlySura(
-                        suraModel: mostRecentlyList[index],
-                      ),
-                      separatorBuilder: (context,index)=>SizedBox(width: 10,),
-                      itemCount: mostRecentlyList.length),
-                ),
+                     //list view of most recently
+                     Expanded(
+                       child: ListView.separated(
+                           scrollDirection:Axis.horizontal ,
+                           itemBuilder: (context,index)=>RecentlySura(
+                             suraModel: mostRecentlyList[index],
+                           ),
+                           separatorBuilder: (context,index)=>SizedBox(width: 10,),
+                           itemCount: mostRecentlyList.length),
+                     ),
+                 ],
 
                 SizedBox(height: 10,),
 
@@ -132,9 +142,18 @@ if(searchValue.isNotEmpty)
                 ListView.separated(
                     itemBuilder: (context,index)=>SuraWidget(
                       addToRecent: (){
-                        mostRecentlyList.insert(0 ,searchValue.isNotEmpty
-                            ?filterList[index]
-                            :suraList[index],);
+                      for(int i =0;i<mostRecentlyList.length;i++){
+                        if(mostRecentlyList[i].suraNameEn==
+                            (searchValue.isNotEmpty
+                         ?filterList[index].suraNameEn
+                        :suraList[index].suraNameEn)){
+                          mostRecentlyList.removeAt(i);
+                        }
+                      }
+                      mostRecentlyList.insert(0 ,searchValue.isNotEmpty
+                          ?filterList[index]
+                          :suraList[index],);
+                        PrefHelper.addRecentList(mostRecentlyList);
                         setState(() {
 
                         });
