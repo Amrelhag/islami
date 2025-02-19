@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:islami/model/SuraModel.dart';
 import 'package:islami/style/reusable_components/AssetsManager.dart';
 import 'package:islami/style/reusable_components/StringsManager.dart';
 import 'package:islami/style/reusable_components/colors.dart';
@@ -7,8 +8,17 @@ import 'package:islami/style/reusable_components/constants.dart';
 import 'package:islami/ui/Home/widget/recentlySura.dart';
 import 'package:islami/ui/Home/widget/suraWidget.dart';
 
-class QuranTab extends StatelessWidget {
-  const QuranTab({super.key});
+class QuranTab extends StatefulWidget {
+
+  @override
+  State<QuranTab> createState() => _QuranTabState();
+}
+
+class _QuranTabState extends State<QuranTab> {
+List<SuraModel> filterList=[];
+
+String searchValue="";
+List<SuraModel> mostRecentlyList =[];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +41,12 @@ class QuranTab extends StatelessWidget {
 
                 SizedBox(height: 21,),
 
-                TextField(
+                TextField(onChanged: (value){
+                  setState(() {
+                    searchSura(value);
+                    searchValue=value;
+                  });
+                },
                   style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 16,
@@ -74,36 +89,59 @@ class QuranTab extends StatelessWidget {
 
                 SizedBox(height: 20,),
 
-                Text(StringsManager.mostRecently,
+                //most recently text
+                if(searchValue.isEmpty)  //list inside children list
+              ...[
+                  Text(StringsManager.mostRecently,
                   style:TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: ColorManager.SearchTextColor
-                  ) ,),
-
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: ColorManager.SearchTextColor,
+    ) ,),
                 SizedBox(height: 10,),
 
+                //list view of most recently
                 Expanded(
                   child: ListView.separated(
                       scrollDirection:Axis.horizontal ,
-                      itemBuilder: (context,index)=>RecentlySura(),
+                      itemBuilder: (context,index)=>RecentlySura(
+                        suraModel: mostRecentlyList[index],
+                      ),
                       separatorBuilder: (context,index)=>SizedBox(width: 10,),
-                      itemCount: 10),
+                      itemCount: mostRecentlyList.length),
                 ),
 
                 SizedBox(height: 10,),
+
+                // sura list text
                 Text(StringsManager.suraList,
                   style:TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: ColorManager.SearchTextColor
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: ColorManager.SearchTextColor
                   ) ,),
-SizedBox(height: 10,),
+                SizedBox(height: 10,),
+                 ] ,
+
+if(searchValue.isNotEmpty)
+  SizedBox(height: 25,),
+                //sura list
                 Expanded(
                     flex: 2,
-                    child:
+                    child:              //most recently
                 ListView.separated(
-                    itemBuilder: (context,index)=>SuraWidget(suraModel: suraList[index],),
+                    itemBuilder: (context,index)=>SuraWidget(
+                      addToRecent: (){
+                        mostRecentlyList.insert(0 ,searchValue.isNotEmpty
+                            ?filterList[index]
+                            :suraList[index],);
+                        setState(() {
+
+                        });
+                      },
+                      suraModel: searchValue.isNotEmpty
+                      ?filterList[index]
+                      :suraList[index],),
                     separatorBuilder:(context,index)=>Padding(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 44
@@ -112,7 +150,9 @@ SizedBox(height: 10,),
                         height: 63,       //height between each sura
                       ),
                     ),
-                    itemCount: suraList.length)),
+                    itemCount:searchValue.isNotEmpty
+                ? filterList.length
+                : suraList.length)),
 
 
               ],
@@ -121,5 +161,21 @@ SizedBox(height: 10,),
         ),
       ),
     ) ;
+  }
+
+  searchSura(String searchText){
+    filterList=[];
+   // for(int i=0 ;i<suraList.length;i++){
+   //   if(suraList[i].suraNameEn.contains(searchText)||suraList[i].suraNameAr.contains(searchText)){
+   //     filterList.add(suraList[i]);
+   //
+   //   }
+   // }
+
+// function that make a loop
+   filterList= suraList.where((element)=>
+    element.suraNameEn.toLowerCase().contains(searchText.toLowerCase())
+        ||element.suraNameAr.contains(searchText.toLowerCase())).toList();
+
   }
 }
