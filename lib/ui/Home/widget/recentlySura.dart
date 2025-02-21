@@ -11,7 +11,7 @@ class RecentlySura extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(onTap:(){
-      Navigator.pushNamed(context, SuraDetailsScreen.routeName,arguments: SuraModel);
+      Navigator.pushNamed(context, SuraDetailsScreen.routeName,arguments:suraModel);
     } ,
       child: Container(
         decoration: BoxDecoration(
