@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:islami/style/reusable_components/AssetsManager.dart';
 import 'package:islami/ui/Home/screen/homeScreen.dart';
+import 'package:islami/ui/onboarding/pages/onboardingScreen.dart';
+import 'package:islami/ui/sura_details/widget/PrefsHelperKeys.dart';
+
+import '../../sura_details/widget/PrefsHelperOnBoarding.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -19,7 +23,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(Duration(seconds: 2),
     (){
-      Navigator.pushReplacementNamed(context, Homescreen.routeName);
+      bool? isFirstTime=LocalStorage.preferences.getBool(LocalStorageKeys.isFirstTimeRun)??true;
+
+      Navigator.pushReplacementNamed(context,
+          isFirstTime?
+          onBoardingScreen.routeName
+      :Homescreen.routeName);
     }
     );
   }
